@@ -1,0 +1,45 @@
+interface QueueRdI, QueueWrI;
+service  ControlPlaneAgentS;
+CE Queue("QueueConfig.cfg") implements QueueRdI, QueueWrI;
+
+PE PacketGenerator("PacketGeneratorConfig.cfg") {
+	QueueWrI out;
+};
+
+PE Logger("LoggerConfig.cfg") {
+	QueueRdI in;
+	QueueWrI out;
+};
+
+PE PacketSink {
+	QueueRdI in;
+};
+
+PE ControlPlane {
+  ControlPlaneAgentS cpa;
+};
+
+PE P4Switch implements ControlPlaneAgentS {
+	QueueRdI in;
+	QueueWrI out;
+};
+
+PE top {
+	Queue ingress, egress;
+	PacketGenerator packet_generator;
+
+	P4Switch p4switch;
+	ControlPlane control_plane;
+
+	bind packet_generator.out {ingress};
+	bind p4switch.in {ingress};
+	bind p4switch.out {egress};
+	bind control_plane.cpa {p4switch};
+
+  Queue logger_out;
+	Logger logger;
+  PacketSink sink;
+	bind logger.in {egress};
+  bind logger.out {logger_out};
+  bind sink.in    {logger_out};
+};

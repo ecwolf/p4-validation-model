@@ -1,0 +1,16 @@
+*.pyc
+*.swp
+*.cache
+tags
+doc/
+*.swp
+*.pcap
+!test-data/input.pcap
+build/
+!build/input.pcap
+!build/expected_output.pcap
+*.a
+notes.txt
+todo.txt
+structural/
+GeneratedSources.cmake
