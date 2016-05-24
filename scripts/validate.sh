@@ -87,7 +87,7 @@ model_out=$(mktemp)
 
 echo -n "Executing model under test... "
 cd $(dirname $model)
-$model -Xp4 $p4prog -Xtpop $table -Xin $input -Xvalidation-out $model_out >/dev/null 2>&1
+$model -Xp4 $p4prog -Xtpop $table -Xin $input -Xvalidation-out $model_out -v minimal # >/dev/null 2>&1
 cd - >/dev/null 2>&1
 echo "done"
 

@@ -50,10 +50,22 @@ sudo tcpdump -t -n -vvv -x -e -r $2 > $expected 2>/dev/null
 
 if cmp --silent $output $expected
 then
-  echo "$1 and $2 are identical"
+  (
+  tput setf 2
+  echo "$1 and $2 are Identical:"
+  tput sgr0
+  echo "== Diff of outputs =="
+  echo -n "|                             OUTPUT                                                |"
+  echo    "|                         EXPECTED OUTPUT                                           |"
+  sdiff -d -w170 $expected $output
+  echo
+  echo
+  ) | less -R
 else
   (
+  tput setf 1
   echo "$1 and $2 are different:"
+  tput sgr0
   echo "== Diff of outputs =="
   echo -n "|                             OUTPUT                                                |"
   echo    "|                         EXPECTED OUTPUT                                           |"
